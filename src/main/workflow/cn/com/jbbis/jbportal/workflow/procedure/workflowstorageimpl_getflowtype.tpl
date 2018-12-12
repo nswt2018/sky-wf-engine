@@ -1,0 +1,10 @@
+<procedure>
+	<sql>
+		select 
+			flowtype
+		from 
+			cmbankelecscope 
+		where 
+			flowid=@flowid
+	</sql>
+</procedure>

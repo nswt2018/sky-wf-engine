@@ -1,0 +1,57 @@
+<procedure>
+	<sql>
+		insert into 
+			dwflowhis(			
+			wfid,
+			flowid,
+			flowname,
+			flowdesc,
+			flowtype,
+			bankid,
+			operid,
+			opername,
+			creattime,
+			nodename,
+			wfstate,
+			exectrancode,
+			submtrancode,
+			looktrancode,
+			taskser,
+			manusql,
+			execsql,
+			unitwfid,
+			instancylevel,
+			isWriteBusiWFMap,
+			busiOperateStyle,
+			lastchgdate, 
+			lastchgtime)
+		select 
+			wfid,
+			flowid,
+			flowname,
+			flowdesc,
+			flowtype,
+			bankid,
+			operid,
+			opername,
+			creattime,
+			nodename,
+			wfstate,
+			exectrancode,
+			submtrancode,
+			looktrancode,
+			taskser,
+			manusql,
+			execsql,
+			unitwfid,
+			instancylevel,
+			isWriteBusiWFMap,
+			busiOperateStyle,
+			@date:lastchgdate,
+			@lastchgtime
+		from 
+			dwflowinst 
+		where 
+			wfid = @wfid
+	</sql>
+</procedure>
