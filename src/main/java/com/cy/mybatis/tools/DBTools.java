@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 public class DBTools {
+	
     public static SqlSessionFactory sessionFactory;
     
     static{
@@ -19,7 +20,6 @@ public class DBTools {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
     }
     //创建能执行映射文件中sql的sqlSession
     public static SqlSession getSession(){
