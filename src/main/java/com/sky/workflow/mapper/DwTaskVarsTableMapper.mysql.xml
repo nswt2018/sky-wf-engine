@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.app.mapper.DwTaskVarsTableMapper">
+ 
+ 	 <select id="findForPageList" parameterType="Page" resultType="DwTaskVarsTable">
+	       select
+	          * 
+	       from 
+	         DwTaskVars
+	       where 1=1
+	             <if test="variables.flowname !=null and variables.flowname !=''">
+	             		and flowname=#{variables.flowname}
+	             </if>
+	 </select>
+
+</mapper>  

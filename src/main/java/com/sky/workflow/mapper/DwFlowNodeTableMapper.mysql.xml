@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.app.mapper.DwFlowNodeTableMapper">
+ 
+ 	 <select id="findForPageList" parameterType="Page" resultType="DwFlowNodeTable">
+	       select
+	          * 
+	       from 
+	         DwFlowNode
+	       where 1=1
+	             <if test="variables.flowname !=null and variables.flowname !=''">
+	             		and flowname=#{variables.flowname}
+	             </if>
+	 </select>
+	 
+	 <resultMap id="BaseResultMap" type="com.sky.workflow.model.DwFlowNodeTable">
+	    <id column="flowid" jdbcType="VARCHAR" property="flowid" />
+	    <id column="nodeid" jdbcType="VARCHAR" property="nodeid" />
+	    <result column="nodename" jdbcType="VARCHAR" property="nodename" />
+	    <result column="nodedesc" jdbcType="VARCHAR" property="nodedesc" />
+	    <result column="nodetype" jdbcType="VARCHAR" property="nodetype" />
+	    <result column="isunit" jdbcType="VARCHAR" property="isunit" />
+	    <result column="unitflowid" jdbcType="VARCHAR" property="unitflowid" />
+	    <result column="mindealnum" jdbcType="DECIMAL" property="mindealnum" />
+	    <result column="autodisuserflag" jdbcType="VARCHAR" property="autodisuserflag" />
+	    <result column="taskoverpolicy" jdbcType="VARCHAR" property="taskoverpolicy" />
+	    <result column="assignminnum" jdbcType="DECIMAL" property="assignminnum" />
+	    <result column="overpercent" jdbcType="DECIMAL" property="overpercent" />
+	    <result column="selectoperflag" jdbcType="VARCHAR" property="selectoperflag" />
+	    <result column="exectrancode" jdbcType="VARCHAR" property="exectrancode" />
+	    <result column="submtrancode" jdbcType="VARCHAR" property="submtrancode" />
+	    <result column="looktrancode" jdbcType="VARCHAR" property="looktrancode" />
+	    <result column="tranterm" jdbcType="DECIMAL" property="tranterm" />
+	    <result column="nextnodemode" jdbcType="VARCHAR" property="nextnodemode" />
+	    <result column="nextnode" jdbcType="VARCHAR" property="nextnode" />
+	    <result column="processmode" jdbcType="VARCHAR" property="processmode" />
+	    <result column="hisflag" jdbcType="VARCHAR" property="hisflag" />
+	    <result column="lastchgdate" jdbcType="DATE" property="lastchgdate" />
+	    <result column="lastchgtime" jdbcType="VARCHAR" property="lastchgtime" />
+	    <result column="nodephase" jdbcType="VARCHAR" property="nodephase" />
+	    <result column="isallowget" jdbcType="VARCHAR" property="isallowget" />
+	    <result column="isallowreturn" jdbcType="VARCHAR" property="isallowreturn" />
+	    <result column="isprimaryauditnode" jdbcType="VARCHAR" property="isprimaryauditnode" />
+	    <result column="assignmindealnumstyle" jdbcType="VARCHAR" property="assignmindealnumstyle" />
+	    <result column="isdrivemessage" jdbcType="VARCHAR" property="isdrivemessage" />
+	    <result column="messageid" jdbcType="VARCHAR" property="messageid" />
+	    <result column="lastchangetime" jdbcType="TIMESTAMP" property="lastchangetime" />
+	    <result column="retutrancode" jdbcType="VARCHAR" property="retutrancode" />
+  	 </resultMap>
+	 <sql id="Base_Column_List">
+	    flowid, nodeid, nodename, nodedesc, nodetype, isunit, unitflowid, mindealnum, autodisuserflag, 
+	    taskoverpolicy, assignminnum, overpercent, selectoperflag, exectrancode, submtrancode, 
+	    looktrancode, tranterm, nextnodemode, nextnode, processmode, hisflag, lastchgdate, 
+	    lastchgtime, nodephase, isallowget, isallowreturn, isprimaryauditnode, assignmindealnumstyle, 
+	    isdrivemessage, messageid, lastchangetime, retutrancode
+	 </sql>
+	 <select id="selectByNodeType" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column_List" />
+	    from dwflownode
+	    where flowid = #{flowid,jdbcType=VARCHAR}
+	      and nodetype = #{nodetype,jdbcType=VARCHAR}
+	 </select>
+
+</mapper>  

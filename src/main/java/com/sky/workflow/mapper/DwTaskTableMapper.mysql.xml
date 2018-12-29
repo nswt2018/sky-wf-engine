@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.app.mapper.DwTaskTableMapper">
+
+	<select id="findForPageList" parameterType="Page"
+		resultType="DwTaskTable">
+		select
+		*
+		from
+		DwTask
+		where 1=1
+		<if test="variables.flowname !=null and variables.flowname !=''">
+			and flowname=#{variables.flowname}
+		</if>
+	</select>
+
+	<resultMap id="BaseResultMap"
+		type="com.sky.workflow.model.DwTaskTable">
+		<id column="wfid" jdbcType="VARCHAR" property="wfid" />
+		<id column="taskser" jdbcType="DECIMAL" property="taskser" />
+		<result column="flowid" jdbcType="VARCHAR" property="flowid" />
+		<result column="bankid" jdbcType="VARCHAR" property="bankid" />
+		<result column="operid" jdbcType="VARCHAR" property="operid" />
+		<result column="recetime" jdbcType="VARCHAR"
+			property="recetime" />
+		<result column="dealtime" jdbcType="VARCHAR"
+			property="dealtime" />
+		<result column="nodeid" jdbcType="VARCHAR" property="nodeid" />
+		<result column="nodename" jdbcType="VARCHAR"
+			property="nodename" />
+		<result column="exectrancode" jdbcType="VARCHAR"
+			property="exectrancode" />
+		<result column="submtrancode" jdbcType="VARCHAR"
+			property="submtrancode" />
+		<result column="looktrancode" jdbcType="VARCHAR"
+			property="looktrancode" />
+		<result column="taskdesc" jdbcType="VARCHAR"
+			property="taskdesc" />
+		<result column="forenodeid" jdbcType="VARCHAR"
+			property="forenodeid" />
+		<result column="lastchgdate" jdbcType="DATE"
+			property="lastchgdate" />
+		<result column="lastchgtime" jdbcType="VARCHAR"
+			property="lastchgtime" />
+		<result column="tasktype" jdbcType="VARCHAR"
+			property="tasktype" />
+		<result column="nodephase" jdbcType="VARCHAR"
+			property="nodephase" />
+		<result column="isallowget" jdbcType="VARCHAR"
+			property="isallowget" />
+		<result column="isallowreturn" jdbcType="VARCHAR"
+			property="isallowreturn" />
+		<result column="taskround" jdbcType="INTEGER"
+			property="taskround" />
+		<result column="isprimaryauditnode" jdbcType="VARCHAR"
+			property="isprimaryauditnode" />
+		<result column="busioperatestyle" jdbcType="VARCHAR"
+			property="busioperatestyle" />
+		<result column="assignmindealnum" jdbcType="DECIMAL"
+			property="assignmindealnum" />
+		<result column="assignmindealnumstyle" jdbcType="VARCHAR"
+			property="assignmindealnumstyle" />
+		<result column="lastchangetime" jdbcType="TIMESTAMP"
+			property="lastchangetime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		wfid, taskser, flowid, bankid, operid, recetime, dealtime,
+		nodeid,
+		nodename, exectrancode,
+		submtrancode, looktrancode, taskdesc,
+		forenodeid, lastchgdate, lastchgtime,
+		tasktype,
+		nodephase, isallowget,
+		isallowreturn, taskround, isprimaryauditnode,
+		busioperatestyle,
+		assignmindealnum, assignmindealnumstyle, lastchangetime
+	</sql>
+	<select id="getByWfidUser"
+		parameterType="com.sky.workflow.model.DwTaskTableKey"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dwtask
+		where wfid = #{wfid,jdbcType=VARCHAR}
+		and bankid = #{bankid,jdbcType=VARCHAR}
+		and operid = #{operid,jdbcType=VARCHAR}
+	</select>
+	<select id="getNumByWfidNodeId">
+		select
+			count(*) as num
+		from dwtask
+		where wfid = #{wfid,jdbcType=VARCHAR}
+		and nodeid = #{nodeid,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.sky.workflow.model.DwTaskTableKey">
+		delete from dwtask
+		where wfid = #{wfid,jdbcType=VARCHAR}
+		and taskser = #{taskser,jdbcType=DECIMAL}
+	</delete>
+</mapper>  
