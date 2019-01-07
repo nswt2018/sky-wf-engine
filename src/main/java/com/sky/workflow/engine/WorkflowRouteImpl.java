@@ -18,7 +18,7 @@ public class WorkflowRouteImpl implements WorkflowRoute {
 	 * @throws java.lang.Exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public UnikMap getNext(LinkedList route, UnikMap wfVars) throws Exception {
+	public UnikMap getNext(LinkedList route, UnikMap wfVars) {
 		Hashtable t = new Hashtable();
 		UnikMap routeResult = new UnikMap();
 		Iterator it = wfVars.keySet().iterator();
@@ -39,17 +39,12 @@ public class WorkflowRouteImpl implements WorkflowRoute {
 				i++;
 
 				exp = replaceExp(exp, t); // 替换变量
-				// System.out.println("exp=" +exp + ";t=" +t);
-
-				///////////// simon modified on 20180908
-				Object obj = new Object();// *****cn.com.jbbis.common.eval.Evaluation.eval(exp,t);
-//				Object obj = null;
-//				try{
-//					obj = cn.com.jbbis.common.eval.Evaluation.eval("EQ(10,同意)",t);
-//				}catch(Exception e) {
-//					e.printStackTrace();
-//				}
-				//////////////////////////////////////////
+				Object obj = null;
+				try {
+					obj = cn.com.jbbis.common.eval.Evaluation.eval(exp, t);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				boolean flag = false;
 				if (obj instanceof Boolean) {
@@ -66,10 +61,6 @@ public class WorkflowRouteImpl implements WorkflowRoute {
 				}
 			}
 		}
-		return null;
-	}
-
-	public String getNext(UnikMap wfVars) throws Exception {
 		return null;
 	}
 

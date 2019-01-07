@@ -27,7 +27,7 @@ public class DwFlowMainTableController extends BaseController{
 	@Resource(name = "DwFlowMainTableService")
 	private IDwFlowMainTableService DwFlowMainTableService;
 	
-	@RequestMapping(value = "/Lc01lc01L.do")
+	@RequestMapping(value = "/Lcdy01s801L.do")
 	@ResponseBody
 	public Mono<Page<DwFlowMainTable>> getDwFlowMainTablePageList(@RequestBody Page<DwFlowMainTable> page, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -37,7 +37,7 @@ public class DwFlowMainTableController extends BaseController{
 		return Mono.justOrEmpty(page);
 	}
 
-	@PutMapping(value = "/Lc01lc01I.do")
+	@PutMapping(value = "/Lcdy01s801I.do")
 	@ResponseBody
 	public Mono<Message> insertDwFlowMainTable(@RequestBody DwFlowMainTable Workflow01, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -58,7 +58,7 @@ public class DwFlowMainTableController extends BaseController{
 		}
 	}
 	
-	@PutMapping(value = "/Lc01lc01U.do")
+	@PutMapping(value = "/Lcdy01s801U.do")
 	@ResponseBody
 	public Mono<Message> updateDwFlowMainTable(@RequestBody DwFlowMainTable Workflow01, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -79,7 +79,7 @@ public class DwFlowMainTableController extends BaseController{
 		}
 	}
 	
-	@DeleteMapping("/Lc01lc01D.do")
+	@DeleteMapping("/Lcdy01s801D.do")
 	@ResponseBody
 	public Mono<Message> deleteDwFlowMainTable(@RequestParam String[] delKeys, HttpServletRequest request,
 			HttpServletResponse response) {

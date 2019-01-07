@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.app.mapper.DbBusiWfMapTableMapper">
+  <resultMap id="BaseResultMap" type="com.sky.workflow.model.DbBusiWfMapTable">
+    <id column="wfid" jdbcType="CHAR" property="wfid" />
+    <result column="loanid" jdbcType="VARCHAR" property="loanid" />
+    <result column="transeq" jdbcType="DECIMAL" property="transeq" />
+    <result column="custid" jdbcType="VARCHAR" property="custid" />
+    <result column="custname" jdbcType="VARCHAR" property="custname" />
+    <result column="prodid" jdbcType="VARCHAR" property="prodid" />
+    <result column="prodname" jdbcType="VARCHAR" property="prodname" />
+    <result column="busitype" jdbcType="CHAR" property="busitype" />
+    <result column="flowid" jdbcType="VARCHAR" property="flowid" />
+    <result column="nodename" jdbcType="VARCHAR" property="nodename" />
+    <result column="curoperid" jdbcType="VARCHAR" property="curoperid" />
+    <result column="curoperidname" jdbcType="VARCHAR" property="curoperidname" />
+    <result column="curbankid" jdbcType="VARCHAR" property="curbankid" />
+    <result column="curbankname" jdbcType="VARCHAR" property="curbankname" />
+    <result column="recetime" jdbcType="CHAR" property="recetime" />
+    <result column="approperid" jdbcType="VARCHAR" property="approperid" />
+    <result column="appropername" jdbcType="VARCHAR" property="appropername" />
+    <result column="apprbankid" jdbcType="VARCHAR" property="apprbankid" />
+    <result column="apprbankname" jdbcType="VARCHAR" property="apprbankname" />
+    <result column="apprdate" jdbcType="VARCHAR" property="apprdate" />
+    <result column="approperlev" jdbcType="CHAR" property="approperlev" />
+    <result column="isfinish" jdbcType="CHAR" property="isfinish" />
+    <result column="isprimaryauditnode" jdbcType="CHAR" property="isprimaryauditnode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    wfid, loanid, transeq, custid, custname, prodid, prodname, busitype, flowid, nodename, 
+    curoperid, curoperidname, curbankid, curbankname, recetime, approperid, appropername, 
+    apprbankid, apprbankname, apprdate, approperlev, isfinish, isprimaryauditnode
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dbbusiwfmap
+    where wfid = #{wfid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dbbusiwfmap
+    where wfid = #{wfid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sky.workflow.model.DbBusiWfMapTable">
+    insert into dbbusiwfmap (wfid, loanid, transeq, 
+      custid, custname, prodid, 
+      prodname, busitype, flowid, 
+      nodename, curoperid, curoperidname, 
+      curbankid, curbankname, recetime, 
+      approperid, appropername, apprbankid, 
+      apprbankname, apprdate, approperlev, 
+      isfinish, isprimaryauditnode)
+    values (#{wfid,jdbcType=CHAR}, #{loanid,jdbcType=VARCHAR}, #{transeq,jdbcType=DECIMAL}, 
+      #{custid,jdbcType=VARCHAR}, #{custname,jdbcType=VARCHAR}, #{prodid,jdbcType=VARCHAR}, 
+      #{prodname,jdbcType=VARCHAR}, #{busitype,jdbcType=CHAR}, #{flowid,jdbcType=VARCHAR}, 
+      #{nodename,jdbcType=VARCHAR}, #{curoperid,jdbcType=VARCHAR}, #{curoperidname,jdbcType=VARCHAR}, 
+      #{curbankid,jdbcType=VARCHAR}, #{curbankname,jdbcType=VARCHAR}, #{recetime,jdbcType=CHAR}, 
+      #{approperid,jdbcType=VARCHAR}, #{appropername,jdbcType=VARCHAR}, #{apprbankid,jdbcType=VARCHAR}, 
+      #{apprbankname,jdbcType=VARCHAR}, #{apprdate,jdbcType=VARCHAR}, #{approperlev,jdbcType=CHAR}, 
+      #{isfinish,jdbcType=CHAR}, #{isprimaryauditnode,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sky.workflow.model.DbBusiWfMapTable">
+    insert into dbbusiwfmap
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wfid != null">
+        wfid,
+      </if>
+      <if test="loanid != null">
+        loanid,
+      </if>
+      <if test="transeq != null">
+        transeq,
+      </if>
+      <if test="custid != null">
+        custid,
+      </if>
+      <if test="custname != null">
+        custname,
+      </if>
+      <if test="prodid != null">
+        prodid,
+      </if>
+      <if test="prodname != null">
+        prodname,
+      </if>
+      <if test="busitype != null">
+        busitype,
+      </if>
+      <if test="flowid != null">
+        flowid,
+      </if>
+      <if test="nodename != null">
+        nodename,
+      </if>
+      <if test="curoperid != null">
+        curoperid,
+      </if>
+      <if test="curoperidname != null">
+        curoperidname,
+      </if>
+      <if test="curbankid != null">
+        curbankid,
+      </if>
+      <if test="curbankname != null">
+        curbankname,
+      </if>
+      <if test="recetime != null">
+        recetime,
+      </if>
+      <if test="approperid != null">
+        approperid,
+      </if>
+      <if test="appropername != null">
+        appropername,
+      </if>
+      <if test="apprbankid != null">
+        apprbankid,
+      </if>
+      <if test="apprbankname != null">
+        apprbankname,
+      </if>
+      <if test="apprdate != null">
+        apprdate,
+      </if>
+      <if test="approperlev != null">
+        approperlev,
+      </if>
+      <if test="isfinish != null">
+        isfinish,
+      </if>
+      <if test="isprimaryauditnode != null">
+        isprimaryauditnode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wfid != null">
+        #{wfid,jdbcType=CHAR},
+      </if>
+      <if test="loanid != null">
+        #{loanid,jdbcType=VARCHAR},
+      </if>
+      <if test="transeq != null">
+        #{transeq,jdbcType=DECIMAL},
+      </if>
+      <if test="custid != null">
+        #{custid,jdbcType=VARCHAR},
+      </if>
+      <if test="custname != null">
+        #{custname,jdbcType=VARCHAR},
+      </if>
+      <if test="prodid != null">
+        #{prodid,jdbcType=VARCHAR},
+      </if>
+      <if test="prodname != null">
+        #{prodname,jdbcType=VARCHAR},
+      </if>
+      <if test="busitype != null">
+        #{busitype,jdbcType=CHAR},
+      </if>
+      <if test="flowid != null">
+        #{flowid,jdbcType=VARCHAR},
+      </if>
+      <if test="nodename != null">
+        #{nodename,jdbcType=VARCHAR},
+      </if>
+      <if test="curoperid != null">
+        #{curoperid,jdbcType=VARCHAR},
+      </if>
+      <if test="curoperidname != null">
+        #{curoperidname,jdbcType=VARCHAR},
+      </if>
+      <if test="curbankid != null">
+        #{curbankid,jdbcType=VARCHAR},
+      </if>
+      <if test="curbankname != null">
+        #{curbankname,jdbcType=VARCHAR},
+      </if>
+      <if test="recetime != null">
+        #{recetime,jdbcType=CHAR},
+      </if>
+      <if test="approperid != null">
+        #{approperid,jdbcType=VARCHAR},
+      </if>
+      <if test="appropername != null">
+        #{appropername,jdbcType=VARCHAR},
+      </if>
+      <if test="apprbankid != null">
+        #{apprbankid,jdbcType=VARCHAR},
+      </if>
+      <if test="apprbankname != null">
+        #{apprbankname,jdbcType=VARCHAR},
+      </if>
+      <if test="apprdate != null">
+        #{apprdate,jdbcType=VARCHAR},
+      </if>
+      <if test="approperlev != null">
+        #{approperlev,jdbcType=CHAR},
+      </if>
+      <if test="isfinish != null">
+        #{isfinish,jdbcType=CHAR},
+      </if>
+      <if test="isprimaryauditnode != null">
+        #{isprimaryauditnode,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sky.workflow.model.DbBusiWfMapTable">
+    update dbbusiwfmap
+    <set>
+      <if test="loanid != null">
+        loanid = #{loanid,jdbcType=VARCHAR},
+      </if>
+      <if test="transeq != null">
+        transeq = #{transeq,jdbcType=DECIMAL},
+      </if>
+      <if test="custid != null">
+        custid = #{custid,jdbcType=VARCHAR},
+      </if>
+      <if test="custname != null">
+        custname = #{custname,jdbcType=VARCHAR},
+      </if>
+      <if test="prodid != null">
+        prodid = #{prodid,jdbcType=VARCHAR},
+      </if>
+      <if test="prodname != null">
+        prodname = #{prodname,jdbcType=VARCHAR},
+      </if>
+      <if test="busitype != null">
+        busitype = #{busitype,jdbcType=CHAR},
+      </if>
+      <if test="flowid != null">
+        flowid = #{flowid,jdbcType=VARCHAR},
+      </if>
+      <if test="nodename != null">
+        nodename = #{nodename,jdbcType=VARCHAR},
+      </if>
+      <if test="curoperid != null">
+        curoperid = #{curoperid,jdbcType=VARCHAR},
+      </if>
+      <if test="curoperidname != null">
+        curoperidname = #{curoperidname,jdbcType=VARCHAR},
+      </if>
+      <if test="curbankid != null">
+        curbankid = #{curbankid,jdbcType=VARCHAR},
+      </if>
+      <if test="curbankname != null">
+        curbankname = #{curbankname,jdbcType=VARCHAR},
+      </if>
+      <if test="recetime != null">
+        recetime = #{recetime,jdbcType=CHAR},
+      </if>
+      <if test="approperid != null">
+        approperid = #{approperid,jdbcType=VARCHAR},
+      </if>
+      <if test="appropername != null">
+        appropername = #{appropername,jdbcType=VARCHAR},
+      </if>
+      <if test="apprbankid != null">
+        apprbankid = #{apprbankid,jdbcType=VARCHAR},
+      </if>
+      <if test="apprbankname != null">
+        apprbankname = #{apprbankname,jdbcType=VARCHAR},
+      </if>
+      <if test="apprdate != null">
+        apprdate = #{apprdate,jdbcType=VARCHAR},
+      </if>
+      <if test="approperlev != null">
+        approperlev = #{approperlev,jdbcType=CHAR},
+      </if>
+      <if test="isfinish != null">
+        isfinish = #{isfinish,jdbcType=CHAR},
+      </if>
+      <if test="isprimaryauditnode != null">
+        isprimaryauditnode = #{isprimaryauditnode,jdbcType=CHAR},
+      </if>
+    </set>
+    where wfid = #{wfid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sky.workflow.model.DbBusiWfMapTable">
+    update dbbusiwfmap
+    set loanid = #{loanid,jdbcType=VARCHAR},
+      transeq = #{transeq,jdbcType=DECIMAL},
+      custid = #{custid,jdbcType=VARCHAR},
+      custname = #{custname,jdbcType=VARCHAR},
+      prodid = #{prodid,jdbcType=VARCHAR},
+      prodname = #{prodname,jdbcType=VARCHAR},
+      busitype = #{busitype,jdbcType=CHAR},
+      flowid = #{flowid,jdbcType=VARCHAR},
+      nodename = #{nodename,jdbcType=VARCHAR},
+      curoperid = #{curoperid,jdbcType=VARCHAR},
+      curoperidname = #{curoperidname,jdbcType=VARCHAR},
+      curbankid = #{curbankid,jdbcType=VARCHAR},
+      curbankname = #{curbankname,jdbcType=VARCHAR},
+      recetime = #{recetime,jdbcType=CHAR},
+      approperid = #{approperid,jdbcType=VARCHAR},
+      appropername = #{appropername,jdbcType=VARCHAR},
+      apprbankid = #{apprbankid,jdbcType=VARCHAR},
+      apprbankname = #{apprbankname,jdbcType=VARCHAR},
+      apprdate = #{apprdate,jdbcType=VARCHAR},
+      approperlev = #{approperlev,jdbcType=CHAR},
+      isfinish = #{isfinish,jdbcType=CHAR},
+      isprimaryauditnode = #{isprimaryauditnode,jdbcType=CHAR}
+    where wfid = #{wfid,jdbcType=CHAR}
+  </update>
+  <select id="findForPageList" parameterType="Page" resultType="DbBusiWfMapTable">
+      select
+         * 
+      from 
+        DbBusiWfMap
+      where 1=1
+            <if test="variables.flowname !=null and variables.flowname !=''">
+            		and flowname=#{variables.flowname}
+            </if>
+  </select>
+</mapper>

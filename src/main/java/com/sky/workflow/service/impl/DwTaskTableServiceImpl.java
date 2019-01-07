@@ -27,8 +27,11 @@ public class DwTaskTableServiceImpl extends BaseServiceImpl<DwTaskTable> impleme
 
 	@Override
 	public void deleteByPrimaryKey(DwTaskTableKey key) {
-		// TODO Auto-generated method stub
-
+		DwTaskTable dwTaskVo = new DwTaskTable();
+		dwTaskVo.setWfid(key.getWfid());
+		dwTaskVo.setTaskser(key.getTaskser());
+		Mapper<DwTaskTable> mapper = super.getDao();
+		mapper.delete(dwTaskVo);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.sky.workflow.util;
 
-public final class NamedException extends Exception
+public final class NamedException extends RuntimeException
 {
 	/**
 	 * serialVersionUID 

@@ -3,6 +3,7 @@ package com.sky.workflow.engine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.sky.workflow.model.DbBusiWfMapTable;
 import com.sky.workflow.model.DwFlowInstTable;
 import com.sky.workflow.model.DwFlowMainTable;
 import com.sky.workflow.model.DwFlowNodeTable;
@@ -16,7 +17,7 @@ import com.sky.workflow.util.UnikMap;
  */
 public interface IWorkflowStorage {
 
-	public DwFlowMainTable getWorkflowDefinition(String flowid) throws Exception;
+	public DwFlowMainTable getWorkflowDefinition(String flowid);
 
 	public DwFlowInstTable getWorkflowInstance(String wfid) throws Exception;
 
@@ -91,9 +92,7 @@ public interface IWorkflowStorage {
 
 	public DataList getTempAuth(UnikMap um) throws Exception;
 
-	public SingleResult getBusiWFMap(String wfid) throws Exception;
-
-	public boolean insertBusiWFMap(UnikMap umBusiWFMap) throws Exception;
+	public DbBusiWfMapTable getBusiWFMap(String wfid);
 
 	public boolean updateReturnBusiWFMap(UnikMap umBusiWFMap) throws Exception;
 
@@ -105,9 +104,9 @@ public interface IWorkflowStorage {
 
 	public boolean updateNormalBusiWFMap(UnikMap node, String wfInstId, String curOperUser) throws Exception;
 
-	public boolean completeBusiWFMap(String wfid, String isFinish) throws Exception;
+	public boolean completeBusiWFMap(String wfid, String isFinish);
 
-	public boolean deleteBusiWFMap(UnikMap umBusiWFMap) throws Exception;
+	public boolean deleteBusiWFMap(String wfid);
 
 	public int getAllUserFromHistoryTask(UnikMap var) throws Exception;
 

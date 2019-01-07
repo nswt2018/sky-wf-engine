@@ -5,4 +5,6 @@ import com.sky.workflow.model.DwFlowInstTable;
 
 public interface IDwFlowInstTableService extends IBaseService<DwFlowInstTable> {
 
+	void updateByPrimaryKeySelective(DwFlowInstTable dwFlowInstVo);
+
 }

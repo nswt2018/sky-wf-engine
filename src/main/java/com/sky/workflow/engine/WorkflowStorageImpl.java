@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import com.sky.workflow.model.DbBusiWfMapTable;
+import com.sky.workflow.model.DwFlowHisTable;
 import com.sky.workflow.model.DwFlowInstTable;
 import com.sky.workflow.model.DwFlowMainTable;
 import com.sky.workflow.model.DwFlowNodeTable;
@@ -20,6 +22,8 @@ import com.sky.workflow.model.DwTaskHisTable;
 import com.sky.workflow.model.DwTaskRoundTable;
 import com.sky.workflow.model.DwTaskTable;
 import com.sky.workflow.model.DwTaskTableKey;
+import com.sky.workflow.service.IDbBusiWfMapTableService;
+import com.sky.workflow.service.IDwFlowHisTableService;
 import com.sky.workflow.service.IDwFlowInstTableService;
 import com.sky.workflow.service.IDwFlowMainTableService;
 import com.sky.workflow.service.IDwFlowNodeTableService;
@@ -60,6 +64,10 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	/** 流程实例表 **/
 	@Resource(name = "DwFlowInstTableService")
 	private IDwFlowInstTableService DwFlowInstTableService;
+	@Resource(name = "DwFlowHisTableService")
+	private IDwFlowHisTableService DwFlowHisTableService;
+	@Resource(name = "DbBusiWfMapTableService")
+	private IDbBusiWfMapTableService DbBusiWfMapTableService;
 	@Resource(name = "DwTaskTableService")
 	private IDwTaskTableService DwTaskTableService;
 	@Resource(name = "DwTaskHisTableService")
@@ -87,7 +95,7 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * @param flowid 工作流程定义编号
 	 * @throws java.lang.Exception
 	 */
-	public DwFlowMainTable getWorkflowDefinition(String flowid) throws Exception {
+	public DwFlowMainTable getWorkflowDefinition(String flowid) {
 
 		// 从缓存中取数
 		DwFlowMainTable dwflowmainVo = DwFlowMainTableService.getById(flowid);
@@ -294,7 +302,12 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	}
 
 	private String getSysdate() {
-		return null;// user.getCache("sysdate");
+		try {
+			return JBDate.formatDate(new Date(), "yyyyMMdd");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -1597,14 +1610,16 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * 更新任务的最大轮次
 	 */
 	public void updateTaskRound(String wfid, int taskRound) throws Exception {
-		UnikMap dp = new UnikMap();
-		dp.put("wfid", wfid);
-		dp.put("taskround", taskRound);
-		SingleResult sr = performAction("", "dwTaskRound", dp);
-		if (sr == null)
-			performAction("", "dwTaskRound", dp);
+
+		DwTaskRoundTable dwTaskRoundVo = new DwTaskRoundTable();
+		dwTaskRoundVo.setWfid(wfid);
+		dwTaskRoundVo.setTaskround(taskRound);
+
+		DwTaskRoundTable record = DwTaskRoundTableService.getById(wfid);
+		if (record == null)
+			DwTaskRoundTableService.save(dwTaskRoundVo);
 		else
-			performAction("", "dwTaskRound", dp);
+			DwTaskRoundTableService.update(dwTaskRoundVo);
 
 	}
 
@@ -1617,10 +1632,9 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * 删除任务的最大轮次 任务结束的时候
 	 */
 	public void deleteTaskRound(String wfid) throws Exception {
-		UnikMap dp = new UnikMap();
-		dp.put("wfid", wfid);
-		performAction("", "dwTaskRound", dp);
-
+		DwTaskRoundTable dwTaskRoundVo = new DwTaskRoundTable();
+		dwTaskRoundVo.setWfid(wfid);
+		DwTaskRoundTableService.delete(dwTaskRoundVo);
 	}
 
 	/**
@@ -1653,25 +1667,37 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 			String custid = busiWorkflow.getString("custid");
 			String custname = busiWorkflow.getString("custname");
 			String prodid = busiWorkflow.getString("prodid");
-			String prodName = busiWorkflow.getString("prodname");
+			String prodname = busiWorkflow.getString("prodname");
 			String busitype = busiWorkflow.getString("busitype");
 			String busitypedetail = busiWorkflow.getString("busitypedetail");
 			int transeq = getBusiMaxNo(loanid) + 1;
+			busitype = Strings.notEmpty(busitypedetail) ? busitypedetail : busitype;
 
-			UnikMap umBusiWFMap = new UnikMap();
-			umBusiWFMap.put("loanid", loanid);
-			umBusiWFMap.put("transeq", transeq);
-			umBusiWFMap.put("custid", custid);
-			umBusiWFMap.put("custname", custname);
-			umBusiWFMap.put("prodid", prodid);
-			umBusiWFMap.put("prodName", prodName);
-			umBusiWFMap.put("busitype", Strings.notEmpty(busitypedetail) ? busitypedetail : busitype);
-			umBusiWFMap.put("wfid", wfid);
-			umBusiWFMap.put("flowId", flowid);
-			umBusiWFMap.put("nodename", "");
-			umBusiWFMap.put("isfinish", "1");
-
-			insertBusiWFMap(umBusiWFMap);
+			DbBusiWfMapTable dbBusiWfMapVo = new DbBusiWfMapTable();
+			dbBusiWfMapVo.setWfid(wfid);
+			dbBusiWfMapVo.setLoanid(loanid);
+			dbBusiWfMapVo.setTranseq(transeq + 0L);
+			dbBusiWfMapVo.setCustid(custid);
+			dbBusiWfMapVo.setCustname(custname);
+			dbBusiWfMapVo.setProdid(prodid);
+			dbBusiWfMapVo.setProdname(prodname);
+			dbBusiWfMapVo.setBusitype(busitype);
+			dbBusiWfMapVo.setFlowid(flowid);
+			dbBusiWfMapVo.setNodename("");
+			dbBusiWfMapVo.setCuroperid("");
+			dbBusiWfMapVo.setCuroperidname("");
+			dbBusiWfMapVo.setCurbankid("");
+			dbBusiWfMapVo.setCurbankname("");
+			dbBusiWfMapVo.setRecetime(getWorkdateCurrTime());
+			dbBusiWfMapVo.setApproperid("");
+			dbBusiWfMapVo.setAppropername("");
+			dbBusiWfMapVo.setApprbankid("");
+			dbBusiWfMapVo.setApprbankname("");
+			dbBusiWfMapVo.setApprdate("");
+			dbBusiWfMapVo.setApproperlev("");
+			dbBusiWfMapVo.setIsfinish("1");
+			dbBusiWfMapVo.setIsprimaryauditnode("");
+			DbBusiWfMapTableService.save(dbBusiWfMapVo);
 		}
 	}
 
@@ -1683,17 +1709,8 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * @throws java.lang.Exception
 	 */
 	public boolean checkBusiWFMapIsExist(String wfid) throws Exception {
-		boolean blExist = false;
-
-		UnikMap map = new UnikMap();
-		map.put("wfid", wfid);
-
-		SingleResult sr = querySingle(getTpl("getbusiwfmap"), map, null);
-
-		if (sr != null) {
-			blExist = true;
-		}
-		return blExist;
+		DbBusiWfMapTable record = DbBusiWfMapTableService.getById(wfid);
+		return record != null ? true : false;
 	}
 
 	/**
@@ -1812,56 +1829,9 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * @return SingleResult 一条记录
 	 * @throws java.lang.Exception
 	 */
-	public SingleResult getBusiWFMap(String wfid) throws Exception {
-
-		UnikMap map = new UnikMap();
-		map.put("wfid", wfid);
-
-		SingleResult sr = performAction("", "dbBusiWFMap", map);
-
-		return sr;
-	}
-
-	/**
-	 * 新增流程实例业务对照表
-	 */
-	public boolean insertBusiWFMap(UnikMap umBusiWFMap) throws Exception {
-		boolean blSuccess = false;
-		try {
-			UnikMap dp = new UnikMap();
-			dp.put("wfid", umBusiWFMap.get("wfid"));
-
-			dp.put("loanid", umBusiWFMap.get("loanid"));
-			dp.put("transeq", umBusiWFMap.get("transeq"));
-			dp.put("custid", umBusiWFMap.get("custid"));
-			dp.put("custname", umBusiWFMap.get("custname"));
-			dp.put("prodid", umBusiWFMap.get("prodid"));
-			dp.put("prodname", umBusiWFMap.get("prodname"));
-			dp.put("busitype", umBusiWFMap.get("busitype"));
-			dp.put("flowid", umBusiWFMap.get("flowid"));
-			dp.put("nodename", umBusiWFMap.get("nodename"));
-			dp.put("curoperid", umBusiWFMap.get("curoperid"));
-			dp.put("curoperidname", umBusiWFMap.get("curoperidname"));
-			dp.put("curbankid", umBusiWFMap.get("curbankid"));
-			dp.put("curbankname", umBusiWFMap.get("curbankname"));
-			dp.put("recetime", getWorkdateCurrTime());
-			dp.put("approperid", umBusiWFMap.get("approperid"));
-			dp.put("appropername", umBusiWFMap.get("appropername"));
-			dp.put("apprbankid", umBusiWFMap.get("apprbankid"));
-			dp.put("apprbankname", umBusiWFMap.get("apprbankname"));
-			dp.put("apprdate", umBusiWFMap.get("apprdate"));
-			dp.put("approperLev", umBusiWFMap.get("approperLev"));
-			dp.put("isfinish", umBusiWFMap.get("isfinish"));
-			// this.log(DEBUG,"debug(insertBusiWFMap)======================================umBusiWFMap.get(\"nodename\")="
-			// +umBusiWFMap.get("nodename"));
-
-			performAction("", "dbBusiWFMap", dp);
-			blSuccess = true;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			blSuccess = false;
-		}
-		return blSuccess;
+	public DbBusiWfMapTable getBusiWFMap(String wfid) {
+		DbBusiWfMapTable dbBusiWfMapVo = DbBusiWfMapTableService.getById(wfid);
+		return dbBusiWfMapVo;
 	}
 
 	/**
@@ -2126,15 +2096,14 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	/**
 	 * 更改流程实例业务对照表的完成标识
 	 */
-	public boolean completeBusiWFMap(String wfid, String isFinish) throws Exception {
+	public boolean completeBusiWFMap(String wfid, String isFinish) {
 		boolean blSuccess = false;
 		try {
-
-			UnikMap dp = new UnikMap();
-			dp.put("wfid", wfid);
-			dp.put("isfinish", isFinish);
-
-			performAction("", "dbBusiWFMap", dp);
+			DbBusiWfMapTable dbBusiWfMapVo = new DbBusiWfMapTable();
+			dbBusiWfMapVo.setWfid(wfid);
+			dbBusiWfMapVo.setIsfinish(isFinish);
+			DbBusiWfMapTableService.update(dbBusiWfMapVo);
+			blSuccess = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			blSuccess = false;
@@ -2145,13 +2114,11 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	/**
 	 * 删除流程实例业务对照表
 	 */
-	public boolean deleteBusiWFMap(UnikMap umBusiWFMap) throws Exception {
+	public boolean deleteBusiWFMap(String wfid) {
 		boolean blSuccess = false;
 		try {
-			UnikMap dp = new UnikMap();
-			dp.put("wfid", umBusiWFMap.get("wfid"));
-
-			performAction("", "dbBusiWFMap", dp);
+			DbBusiWfMapTableService.delete(wfid);
+			blSuccess = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			blSuccess = false;
@@ -2409,41 +2376,34 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	/**
 	 * 更新流程实例中的任务编号
 	 */
-	public void updateTaskSerial(String wfInstId, int nextSerial) throws Exception {
-
-		UnikMap dp = new UnikMap();
-		// dp.enableModifyFlag();
-		dp.setInt("taskser", nextSerial);
-		dp.put("wfid", wfInstId);
-
-		performAction("", "dwflowinst", dp);
+	public void updateTaskSerial(String wfid, int taskser) throws Exception {
+		updateTaskSerial(wfid, taskser, null);
 	}
 
 	/**
 	 * 更新流程实例的流程状态
 	 */
-	public void updateWorkflowStatus(String wfInstId, int status) throws Exception {
-		UnikMap dp = new UnikMap();
-		dp.setInt("wfstate", status);
-		dp.put("wfid", wfInstId);
-
-		performAction("", "dwflowinst", dp);
+	public void updateWorkflowStatus(String wfid, int status) throws Exception {
+		DwFlowInstTable dwFlowInstVo = new DwFlowInstTable();
+		dwFlowInstVo.setWfid(wfid);
+		dwFlowInstVo.setWfstate(status + "");
+		DwFlowInstTableService.updateByPrimaryKeySelective(dwFlowInstVo);
 	}
 
 	/**
 	 * 更新流程实例中的任务编号和紧急程度
 	 */
-	public void updateTaskSerial(String wfInstId, int nextSerial, String instancylevel) throws Exception {
+	public void updateTaskSerial(String wfid, int taskser, String instancylevel) throws Exception {
 
-		UnikMap dp = new UnikMap();
-		// dp.enableModifyFlag();
-		dp.setInt("taskser", nextSerial);
+		DwFlowInstTable dwFlowInstVo = new DwFlowInstTable();
+		dwFlowInstVo.setWfid(wfid);
+		dwFlowInstVo.setTaskser(taskser + 0L);
+
 		if (null != instancylevel && !"".equals(instancylevel)) {
-			dp.put("instancylevel", instancylevel);
+			dwFlowInstVo.setInstancylevel(instancylevel);
 		}
-		dp.put("wfid", wfInstId);
 
-		performAction("", "dwflowinst", dp);
+		DwFlowInstTableService.updateByPrimaryKeySelective(dwFlowInstVo);
 	}
 
 	/**
@@ -2613,8 +2573,8 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	/**
 	 * 得到参数列表,主要是给路由器作参数使用
 	 * 
-	 * @param wfid 工作流实例编号
-	 * @param reload   是否重载参数,reload=false并且已有参数时不会再去查询数据库
+	 * @param wfid   工作流实例编号
+	 * @param reload 是否重载参数,reload=false并且已有参数时不会再去查询数据库
 	 * @return UnikMap vars参数列表
 	 * @throws java.lang.Exception
 	 */
@@ -2622,17 +2582,13 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 		if (!reload && vars.size() != 0)
 			return vars;
 
-		/*//DwTaskVarsTableService.
-		UnikMap dp = new UnikMap();
-		dp.put("wfid", wfid);
-		dp.put("order", "asc");
-		DataList dl = executeProcedure(getTpl("getAllDwTaskVars"), dp);
-		while (dl.next()) {
-			// 此算法保证读取的变量是最新保存的
-			String name = dl.getString("varname");
-			String value = dl.getString("varvalue");
-			vars.put(name, value);
-		}*/
+		/*
+		 * //DwTaskVarsTableService. UnikMap dp = new UnikMap(); dp.put("wfid", wfid);
+		 * dp.put("order", "asc"); DataList dl =
+		 * executeProcedure(getTpl("getAllDwTaskVars"), dp); while (dl.next()) { //
+		 * 此算法保证读取的变量是最新保存的 String name = dl.getString("varname"); String value =
+		 * dl.getString("varvalue"); vars.put(name, value); }
+		 */
 
 		return vars;
 	}
@@ -2643,32 +2599,36 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * @since JBPortal 3.0
 	 * @throws java.lang.Exception
 	 */
-	public void completeInstance(String wfInstId) throws Exception {
-		/*
-		 * <sql name="insertDwFlowHisFromdwFlowInst"> insert into dwFlowHis select
-		 * 
-		 * from dwFlowInst where wfid = @wfid </sql>
-		 */
-
-		UnikMap dp = new UnikMap();
-		dp.put("wfid", wfInstId);
-		dp.put("lastchgdate", getSysdate());
-		dp.put("lastchgtime", getWorkdateCurrTime());
-
-		executeProcedure(getTpl("insertDwFlowHisFromdwFlowInst"), dp);
-
-		// 删除表dwFlowInst中数据
-		performAction("", "dwflowinst", dp);
-
-		DataList dlist = executeProcedure(getTpl("getAllDwtaskhis"), dp);
-		if (dlist.next()) {
-			// String flowdesc = q.getString("taskdesc");
-			String looktrancode = dlist.getString("looktrancode");
-
-			dp.put("looktrancode", looktrancode);
-
-			performAction("", "dwflowhis", dp);
-		}
+	public void completeInstance(String wfid) throws Exception {
+		Date lastDate = new Date();
+		DwFlowInstTable dwFlowInstVo = DwFlowInstTableService.getById(wfid);
+		DwFlowHisTable dwFlowHisVo = new DwFlowHisTable();
+		dwFlowHisVo.setWfid(dwFlowInstVo.getWfid());
+		dwFlowHisVo.setFlowid(dwFlowInstVo.getFlowid());
+		dwFlowHisVo.setFlowname(dwFlowInstVo.getFlowname());
+		dwFlowHisVo.setFlowdesc(dwFlowInstVo.getFlowdesc());
+		dwFlowHisVo.setFlowtype(dwFlowInstVo.getFlowtype());
+		dwFlowHisVo.setBankid(dwFlowInstVo.getBankid());
+		dwFlowHisVo.setOperid(dwFlowInstVo.getOperid());
+		dwFlowHisVo.setOpername(dwFlowInstVo.getOpername());
+		dwFlowHisVo.setCreattime(dwFlowInstVo.getCreattime());
+		dwFlowHisVo.setNodename(dwFlowInstVo.getNodename());
+		dwFlowHisVo.setWfstate(dwFlowInstVo.getWfstate());
+		dwFlowHisVo.setExectrancode(dwFlowInstVo.getExectrancode());
+		dwFlowHisVo.setSubmtrancode(dwFlowInstVo.getSubmtrancode());
+		dwFlowHisVo.setLooktrancode(dwFlowInstVo.getLooktrancode());
+		dwFlowHisVo.setTaskser(dwFlowInstVo.getTaskser());
+		dwFlowHisVo.setManusql(dwFlowInstVo.getManusql());
+		dwFlowHisVo.setExecsql(dwFlowInstVo.getExecsql());
+		dwFlowHisVo.setUnitwfid(dwFlowInstVo.getUnitwfid());
+		dwFlowHisVo.setInstancylevel(dwFlowInstVo.getInstancylevel());
+		dwFlowHisVo.setLastchgdate(lastDate);
+		dwFlowHisVo.setLastchgtime(getWorkdateCurrTime());
+		dwFlowHisVo.setIswritebusiwfmap(dwFlowInstVo.getIswritebusiwfmap());
+		dwFlowHisVo.setBusioperatestyle(dwFlowInstVo.getBusioperatestyle());
+		dwFlowHisVo.setLastchangetime(lastDate);
+		DwFlowHisTableService.save(dwFlowHisVo);
+		DwFlowInstTableService.delete(dwFlowInstVo);
 	}
 
 	/**

@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sky.workflow.model.DbBusiWfMapTable;
 import com.sky.workflow.model.DwFlowInstTable;
 import com.sky.workflow.model.DwFlowMainTable;
 import com.sky.workflow.model.DwFlowNodeTable;
@@ -192,7 +193,7 @@ public class Workflow implements SupperLog {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
-	protected AppResponse resume(String wfid, String user, UnikMap bizData, String[] users, String[] viewUsers, boolean blStart, boolean isDirectForeNode, UnikMap outTaskNode, Queue<UnikMap> tranQueue) throws Exception {
+	public AppResponse resume(String wfid, String user, UnikMap bizData, String[] users, String[] viewUsers, boolean blStart, boolean isDirectForeNode, UnikMap outTaskNode, Queue<UnikMap> tranQueue) throws Exception {
 
 		String routetype = "0", taskassignstyle = "N";
 		ArrayList taskList = new ArrayList(); // 输出分配多人的任务信息列表
@@ -223,7 +224,7 @@ public class Workflow implements SupperLog {
 
 		// 得到当前节点定义,如果不等于空说明是开始节点所以就不用再查询一次节点信息了
 		boolean ischeckNode = true;
-		if (currentNode == null) {
+		if (!blStart) {
 			currentNode = storage.getNodeById(flowid, nodeid);
 		} else {
 			ischeckNode = false;
@@ -738,8 +739,8 @@ public class Workflow implements SupperLog {
 					if (custScope != null && custScope.equals("2")) // 指定客户
 					{
 						// 根据流程实例编号wfInstId到流程业务对照表中获取客户信息
-						SingleResult sr = storage.getBusiWFMap(wfInstId);
-						String custid = sr.getString("custid");
+						DbBusiWfMapTable dbBusiWfMapVo = storage.getBusiWFMap(wfInstId);
+						String custid = dbBusiWfMapVo.getCustid();
 
 						// 根据客户编号到指定客户表检查是否设定了该客户
 						UnikMap umCust = new UnikMap();
