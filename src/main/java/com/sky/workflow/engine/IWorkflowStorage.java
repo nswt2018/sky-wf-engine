@@ -147,11 +147,11 @@ public interface IWorkflowStorage {
 
 	public void doWithDraw(String flowid, String wfid) throws Exception;
 
-	public AppResponse doReturnService(UnikMap node, UnikMap varsUm) throws Exception;
+	public void doReturnService(UnikMap node, UnikMap varsUm);
 
-	public AppResponse doEndService(UnikMap node, UnikMap varsUm) throws Exception;
+	public void doEndService(UnikMap node, UnikMap varsUm);
 
-	public AppResponse doService(UnikMap v) throws Exception;
+	public void doService(UnikMap v);
 
 	public String[] getTaskLeastUser(String[] user, int num) throws Exception;
 

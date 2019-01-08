@@ -2675,7 +2675,7 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * @param v 执行交易所以参数,一般为request
 	 * @throws java.lang.Exception
 	 */
-	public AppResponse doReturnService(UnikMap node, UnikMap varsUm) throws Exception {
+	public void doReturnService(UnikMap node, UnikMap varsUm) {
 		/*
 		 * String tid = node.getString("retutrancode");
 		 * //getInstVar(node.getString("wfid"), false); AppRequest req = new
@@ -2687,10 +2687,10 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 		 * if(n.length==2){ req.put(n[1], val); }else{ req.put(name, val); } }
 		 */
 
-		return new AppResponse();// invoke(tid, req);
+		// return new AppResponse();// invoke(tid, req);
 	}
 
-	public AppResponse doEndService(UnikMap node, UnikMap varsUm) throws Exception {
+	public void doEndService(UnikMap node, UnikMap varsUm) {
 		/*
 		 * String tid = node.getString("submtrancode");
 		 * //getInstVar(node.getString("wfid"), false); AppRequest req = new
@@ -2716,7 +2716,7 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 		 * if("同意会议记录".equals(dealopin)) { req.put("dealopin", "60"); }
 		 */
 
-		return new AppResponse();// invoke(tid, req);
+		// return new AppResponse();// invoke(tid, req);
 	}
 
 	/**
@@ -2725,7 +2725,7 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 	 * @param v 执行交易所以参数,一般为request
 	 * @throws java.lang.Exception
 	 */
-	public AppResponse doService(UnikMap v) throws Exception {
+	public void doService(UnikMap v) {
 		/*
 		 * String tid = v.getString("submtrancode"); getInstVar(v.getString("wfid"),
 		 * false); AppRequest req = new AppRequest();
@@ -2736,7 +2736,7 @@ public class WorkflowStorageImpl implements IWorkflowStorage {
 		 * req.put(name, val); } }
 		 */
 
-		return new AppResponse();// invoke(tid, req);
+		// return new AppResponse();// invoke(tid, req);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.sky.workflow.engine;
 
-public class Logger implements SupperLog{
+public class Logger implements SupperLog {
 	/**
 	 * 记录日志信息
 	 * 
@@ -8,6 +8,6 @@ public class Logger implements SupperLog{
 	 * @param obj
 	 */
 	protected void log(int i, Object obj) {
-		
+		System.out.println("LogLeve" + i + obj);
 	}
 }

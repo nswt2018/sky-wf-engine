@@ -10,6 +10,5 @@ public interface SupperLog {
 	public static final int COST = 32;
 	public static final int SQL = 64;
 	public static final int NETIO = 128;
-	public static final String LOGCATNAMES[] = { "DEBUG", "INFO", "WARN",
-			"ERROR", "FATAL", "COST", "SQL", "NETIO" };
+	public static final String LOGCATNAMES[] = { "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "COST", "SQL", "NETIO" };
 }

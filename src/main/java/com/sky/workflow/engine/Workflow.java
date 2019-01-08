@@ -71,7 +71,7 @@ import com.sky.workflow.util.UnikMap;
  * @version 1.0.0 , 2008-5-15 上午08:38:00
  */
 @Service("Workflow")
-public class Workflow implements SupperLog {
+public class Workflow extends Logger {
 
 	/**
 	 * <p>
@@ -193,7 +193,7 @@ public class Workflow implements SupperLog {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
-	public AppResponse resume(String wfid, String user, UnikMap bizData, String[] users, String[] viewUsers, boolean blStart, boolean isDirectForeNode, UnikMap outTaskNode, Queue<UnikMap> tranQueue) throws Exception {
+	public void resume(String wfid, String user, UnikMap bizData, String[] users, String[] viewUsers, boolean blStart, boolean isDirectForeNode, UnikMap outTaskNode, Queue<UnikMap> tranQueue) throws Exception {
 
 		String routetype = "0", taskassignstyle = "N";
 		ArrayList taskList = new ArrayList(); // 输出分配多人的任务信息列表
@@ -254,7 +254,7 @@ public class Workflow implements SupperLog {
 		if (!storage.isContinue(currentNode, dwTaskVo, blStart)) {
 			log(DEBUG, "[WF_IN_Resume] this task has many user to dispose, so need return");
 			outTaskNode.put("isLastDealer", "false");
-			return null;
+			return;// null;
 		}
 		outTaskNode.put("isLastDealer", "true");
 
@@ -267,7 +267,7 @@ public class Workflow implements SupperLog {
 		Errors.Assert(nextNodeId != null && !nextNodeId.equals(""), "workflow/NextNodeNotFound");
 
 		if (CommonConst.WF_NODETYPE_UNITE.equals(currentNode.getNodetype()))
-			return null;
+			return;// null;
 
 		String[] nextIds = splitCsv(nextNodeId);
 		DwFlowNodeTable[] outNextNode = new DwFlowNodeTable[nextIds.length]; // 记录输出到交易中的结点
@@ -379,7 +379,7 @@ public class Workflow implements SupperLog {
 				tranUm.put("vars", formatVars(wfVars));
 				tranUm.put("trantype", "endtrans");
 				tranQueue.add(tranUm);
-				AppResponse res = null;
+				// AppResponse res = null;
 				// AppResponse res = storage.doService(nextNode); //liuxj
 				// 检查是否拼接流程
 				if (CommonConst.WF_ISYESORNO_YES.equals(nextNode.getIsunit())) {
@@ -404,7 +404,7 @@ public class Workflow implements SupperLog {
 					outTaskNode.put("wfid", wfid);
 					outTaskNode.put("taskSer", taskList);
 				}
-				return res;
+				return;// res;
 			}
 			// 中间节点进行任务分配
 			assignTask(flowid, wfid, nextNode, user, users, viewUsers, taskList, new UnikMap());
@@ -439,10 +439,10 @@ public class Workflow implements SupperLog {
 			outTaskNode.put("wfid", wfid);
 			outTaskNode.put("taskSer", taskList);
 		}
-		return null;
+		return;// null;
 	}
 
-	protected AppResponse startSubWF(String wfInstId, String wfDefId, String user, UnikMap bizData, String[] users, String[] viewUsers, UnikMap outTaskNode) throws Exception {
+	protected void startSubWF(String wfInstId, String wfDefId, String user, UnikMap bizData, String[] users, String[] viewUsers, UnikMap outTaskNode) throws Exception {
 		// 流程实例编号
 		log(DEBUG, "[sub workflow NO:1] sub workflow start, value is " + wfInstId);
 		// 得到开始节点定义
@@ -457,7 +457,7 @@ public class Workflow implements SupperLog {
 		storage.insertTaskRound(wfInstId, 1);
 		log(DEBUG, "[WF_start NO:4.2] begin to WriteBusiWFMap, wfid=" + wfInstId + "");
 
-		return null;
+		return;// null;
 	}
 
 	/**
@@ -1068,9 +1068,5 @@ public class Workflow implements SupperLog {
 				storage.saveDwFlowInstTable(dwFlowInstVoNw);
 			}
 		}
-	}
-
-	private void log(int i, Object obj) {
-		System.out.println(obj);
 	}
 }
